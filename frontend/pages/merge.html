@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Merge PDF Files</title>
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    
+    <div class="container"><div id="navbar-placeholder"></div></div>
+    <div class="container text-center">
+        <h1>Merge PDF Files</h1>
+        <p>Combine PDFs in the order you want with the PDF merger.</p>
+    
+        <form id="pdfUploadForm" enctype="multipart/form-data">
+            <div class="mb-3">
+                <input type="file" class="form-control" id="pdfInput" accept=".pdf" multiple>
+            </div>
+            <button type="button" class="btn btn-primary" onclick="mergePDFs()">Upload & Merge</button>
+        </form>
+    </div>
+
+    <script>
+    // Load navbar and header dynamically
+    fetch("navbar")
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById("navbar-placeholder").innerHTML = data;
+        });
+    fetch("header")
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById("header-placeholder").innerHTML = data;
+        });
+
+    // Merge PDFs
+    function mergePDFs() {
+        let input = document.getElementById("pdfInput");
+        let files = input.files;
+
+        if (files.length < 2) {
+            alert("Please select at least two PDF files.");
+            return;
+        }
+
+        let formData = new FormData();
+        for (let i = 0; i < files.length; i++) {
+            formData.append("pdfFiles", files[i]);
+        }
+
+        fetch("/api/merge", {
+            method: "POST",
+            body: formData
+        })
+        .then(response => response.blob())
+        .then(blob => {
+            let url = window.URL.createObjectURL(blob);
+            let a = document.createElement("a");
+            a.href = url;
+            a.download = "merged.pdf";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        })
+        .catch(error => {
+            alert("Error: " + error.message);
+            console.error("Error:", error);
+        });
+    }
+    </script>
+</body>
+</html>

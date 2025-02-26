@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compress PDF File</title>
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    
+    <div class="container">
+        <div id="navbar-placeholder"></div>
+    </div>
+    <div class="container text-center">
+        <h1>Compress PDF File</h1>
+        <p>Compress PDF with the PDF Compressor.</p>
+    
+        <form id="pdfUploadForm" enctype="multipart/form-data">
+            <div class="mb-3">
+                <input type="file" class="form-control" id="pdfInput" accept=".pdf">
+            </div>
+            <button type="button" class="btn btn-primary" onclick="compressPDF()">Compress</button>
+        </form>
+    </div>
+
+    <script>
+    // Load navbar and header dynamically
+    fetch("navbar")
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById("navbar-placeholder").innerHTML = data;
+        });
+
+    fetch("header")
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById("header-placeholder").innerHTML = data;
+        });
+
+    // Function to send PDF for compression
+    function compressPDF() {
+        let input = document.getElementById("pdfInput");
+        let file = input.files[0];
+
+        if (!file) {
+            alert("Please select a PDF file.");
+            return;
+        }
+
+        let formData = new FormData();
+        formData.append("pdfFile", file);
+
+        fetch("/api/compress", {
+            method: "POST",
+            body: formData
+        })
+        .then(response => response.blob())
+        .then(blob => {
+            if (blob.size === 0) {
+                throw new Error("Received empty file. Check backend processing.");
+            }
+            let url = window.URL.createObjectURL(blob);
+            let a = document.createElement("a");
+            a.href = url;
+            a.download = "compressed.pdf";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        })
+        .catch(error => {
+            alert("Error: " + error.message);
+            console.error("Error:", error);
+        });
+    }
+    </script>
+</body>
+</html>

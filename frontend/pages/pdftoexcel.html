@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Convert PDF to Excel</title>
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    
+    <div class="container"><div id="navbar-placeholder"></div></div>
+    <div class="container text-center">
+        <h1>Convert PDF to Excel</h1>
+        <p>Convert PDF into an Excel spreadsheet in a few seconds.</p>
+    
+        <form id="pdfUploadForm" enctype="multipart/form-data">
+            <div class="mb-3">
+                <input type="file" class="form-control" id="pdfInput" accept=".pdf">
+            </div>
+            <button type="button" class="btn btn-primary" onclick="convertPDFToExcel()">Upload</button>
+        </form>
+    </div>
+
+    <script>
+    fetch("navbar")
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById("navbar-placeholder").innerHTML = data;
+        });
+    fetch("header")
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById("header-placeholder").innerHTML = data;
+        });
+
+    function convertPDFToExcel() {
+        let input = document.getElementById("pdfInput");
+        let file = input.files[0];
+
+        if (!file) {
+            alert("Please select a PDF file.");
+            return;
+        }
+
+        let formData = new FormData();
+        formData.append("pdfFile", file);
+
+        fetch("/api/pdftoexcel", {
+            method: "POST",
+            body: formData
+        })
+        .then(response => response.blob())
+        .then(blob => {
+            let url = window.URL.createObjectURL(blob);
+            let a = document.createElement("a");
+            a.href = url;
+            a.download = "converted.xlsx";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        })
+        .catch(error => {
+            alert("Error: " + error.message);
+            console.error("Error:", error);
+        });
+    }
+    </script>
+</body>
+</html>

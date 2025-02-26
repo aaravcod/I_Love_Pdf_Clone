@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ILovePDF</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <div class="container">
+        <div id="navbar-placeholder"></div>
+    </div>
+
+    <div class="container mt-4">
+        <!-- First Row -->
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card shadow-sm" onclick="window.location.href='merge'" style="cursor: pointer;">
+                    <img src="../assets/merge.png" class="card-img-top" alt="Merge PDFs">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Merge PDFs</h5>
+                        <p class="card-text">Combine multiple PDFs into one</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card shadow-sm" onclick="window.location.href='compress'" style="cursor: pointer;">
+                    <img src="../assets/compress.png" class="card-img-top" alt="Compress PDF">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Compress PDFs</h5>
+                        <p class="card-text">Reduce the size of PDF file</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card shadow-sm" onclick="window.location.href='split'" style="cursor: pointer;">
+                    <img src="../assets/split.png" class="card-img-top" alt="Split PDF">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Split PDF</h5>
+                        <p class="card-text">Split PDF files</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Second Row -->
+        <div class="row g-4 mt-2">
+            <div class="col-md-4">
+                <div class="card shadow-sm" onclick="window.location.href='pdftoword'" style="cursor: pointer;">
+                    <img src="../assets/word.png" class="card-img-top" alt="PDF to Word">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Convert PDF to Word</h5>
+                        <p class="card-text">Convert PDF into a Word file for easy editing.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card shadow-sm" onclick="window.location.href='pdftoppt'" style="cursor: pointer;">
+                    <img src="../assets/ppt.png" class="card-img-top" alt="PDF to PPT">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Convert PDF to PPT</h5>
+                        <p class="card-text">Convert PDF into a PPT slideshow.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card shadow-sm" onclick="window.location.href='pdftoexcel'" style="cursor: pointer;">
+                    <img src="../assets/excel.png" class="card-img-top" alt="PDF to Excel">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Convert PDF to Excel</h5>
+                        <p class="card-text">Convert PDF to an Excel spreadsheet.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Third Row -->
+        <div class="row g-4 mt-2">
+            <div class="col-md-4">
+                <div class="card shadow-sm" onclick="window.location.href='lock'" style="cursor: pointer;">
+                    <img src="../assets/lock.png" class="card-img-top" alt="Protect PDF">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Protect PDF</h5>
+                        <p class="card-text">Add a password to the PDF for security.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card shadow-sm" onclick="window.location.href='unlock'" style="cursor: pointer;">
+                    <img src="../assets/unlock.png" class="card-img-top" alt="Unlock PDF">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Unlock PDF</h5>
+                        <p class="card-text">Remove password from the PDF.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card shadow-sm" onclick="window.location.href='wordtopdf'" style="cursor: pointer;">
+                    <img src="../assets/word.png" class="card-img-top" alt="Word to PDF">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Word to PDF</h5>
+                        <p class="card-text">Convert Word document to PDF.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fourth Row -->
+        <div class="row g-4 mt-2">
+            <div class="col-md-4">
+                <div class="card shadow-sm" onclick="window.location.href='exceltopdf'" style="cursor: pointer;">
+                    <img src="../assets/excel.png" class="card-img-top" alt="Excel to PDF">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Excel to PDF</h5>
+                        <p class="card-text">Convert Excel spreadsheet to PDF.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card shadow-sm" onclick="window.location.href='ppttopdf'" style="cursor: pointer;">
+                    <img src="../assets/ppt.png" class="card-img-top" alt="PPT to PDF">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">PPT to PDF</h5>
+                        <p class="card-text">Convert PowerPoint Presentation to PDF.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load Navbar and Header -->
+    <script>
+        fetch("navbar")
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById("navbar-placeholder").innerHTML = data;
+            });
+
+        fetch("header")
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById("header-placeholder").innerHTML = data;
+            });
+    </script>
+</body>
+</html>

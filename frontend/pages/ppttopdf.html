@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PowerPoint to PDF</title>
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    
+    <div class="container"><div id="navbar-placeholder"></div></div>
+    <div class="container text-center">
+        <h1>Convert PowerPoint to PDF</h1>
+        <p>Upload a PowerPoint file to convert it into a PDF.</p>
+    
+        <form id="pptUploadForm" enctype="multipart/form-data">
+            <input type="file" id="pptInput" class="form-control" accept=".ppt,.pptx" required>
+            <button type="button" class="btn btn-primary mt-2" onclick="convertPPTToPDF()">Convert to PDF</button>
+        </form>
+    </div>
+
+    <script>
+    fetch("navbar")
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById("navbar-placeholder").innerHTML = data;
+        });
+    fetch("header")
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById("header-placeholder").innerHTML = data;
+        });
+        
+    function convertPPTToPDF() {
+        let input = document.getElementById("pptInput");
+        let file = input.files[0];
+
+        if (!file) {
+            alert("Please select a PowerPoint file.");
+            return;
+        }
+
+        let formData = new FormData();
+        formData.append("pptFile", file);
+
+        fetch("/api/ppttopdf", {
+            method: "POST",
+            body: formData
+        })
+        .then(response => response.blob())
+        .then(blob => {
+            let url = window.URL.createObjectURL(blob);
+            let a = document.createElement("a");
+            a.href = url;
+            a.download = "converted.pdf";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        })
+        .catch(error => console.error("Error:", error));
+    }
+    </script>
+</body>
+</html>

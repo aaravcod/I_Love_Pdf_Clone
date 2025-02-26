@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Remove Password from PDF</title>
+</head>
+<body>
+    <div id="header-placeholder"></div>
+
+    <div class="container"><div id="navbar-placeholder"></div></div>
+    <div class="container text-center">
+        <h1>Remove Password from PDF</h1>
+        <p>Unlock your password-protected PDF file.</p>
+
+        <form id="pdfUploadForm" enctype="multipart/form-data">
+            <div class="mb-3">
+                <input type="file" class="form-control" id="pdfInput" accept=".pdf">
+            </div>
+            <div class="mb-3">
+                <input type="password" class="form-control" id="passwordInput" placeholder="Enter password">
+            </div>
+            <button type="button" class="btn btn-primary" onclick="removePassword()">Unlock PDF</button>
+        </form>
+    </div>
+
+    <script>
+    fetch("navbar")
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById("navbar-placeholder").innerHTML = data;
+        });
+    fetch("header")
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById("header-placeholder").innerHTML = data;
+        });
+
+    function removePassword() {
+        let file = document.getElementById("pdfInput").files[0];
+        let password = document.getElementById("passwordInput").value;
+
+        if (!file || !password) {
+            alert("Please select a PDF and enter the password.");
+            return;
+        }
+
+        let formData = new FormData();
+        formData.append("pdfFile", file);
+        formData.append("password", password);
+
+        fetch("/api/unlock", {
+            method: "POST",
+            body: formData
+        })
+        .then(response => response.blob())
+        .then(blob => {
+            let url = window.URL.createObjectURL(blob);
+            let a = document.createElement("a");
+            a.href = url;
+            a.download = "unlocked.pdf";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        })
+        .catch(error => {
+            alert("Error: " + error.message);
+            console.error("Error:", error);
+        });
+    }
+    </script>
+</body>
+</html>

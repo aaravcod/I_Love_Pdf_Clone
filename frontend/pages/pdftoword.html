@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Convert PDF into Word File</title>
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    
+    <div class="container">
+        <div id="navbar-placeholder"></div>
+    </div>
+    <div class="container text-center">
+        <h1>Convert PDF into Word File</h1>
+        <p>Convert PDF into a Word file for easy editing.</p>
+    
+        <form id="pdfUploadForm" enctype="multipart/form-data">
+            <div class="mb-3">
+                <input type="file" class="form-control" id="pdfInput" accept=".pdf">
+            </div>
+            <button type="button" class="btn btn-primary" onclick="convertPDFToWord()">Upload</button>
+        </form>
+    </div>
+    
+
+    <script>
+    // Load navbar and header dynamically
+    fetch("navbar")
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById("navbar-placeholder").innerHTML = data;
+        });
+
+    fetch("header")
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById("header-placeholder").innerHTML = data;
+        });
+
+    // Convert PDF to Word
+    function convertPDFToWord() {
+        let input = document.getElementById("pdfInput");
+        let file = input.files[0];
+
+        if (!file) {
+            alert("Please select a PDF file.");
+            return;
+        }
+
+        // Validate file type (only PDF)
+        if (file.type !== "application/pdf") {
+            alert("Invalid file format! Please upload a PDF.");
+            return;
+        }
+
+        let formData = new FormData();
+        formData.append("pdfFile", file);
+
+        fetch("/api/pdftoword", {
+            method: "POST",
+            body: formData
+        })
+        .then(response =>response.blob())
+        .then(blob => {
+            if (blob.size === 0) {
+                throw new Error("Received empty file. Check backend processing.");
+            }
+            let url = window.URL.createObjectURL(blob);
+            let a = document.createElement("a");
+            a.href = url;
+            a.download = "converted.docx";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        })
+        .catch(error => {
+            alert("Error: " + error.message);
+            console.error("Error:", error);
+        });
+    }
+    </script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word to PDF</title>
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    
+    <div class="container"><div id="navbar-placeholder"></div></div>
+    <div class="container text-center">
+        <h1>Convert Word to PDF</h1>
+        <p>Upload a Word file to convert it into a PDF.</p>
+    
+        <form id="wordUploadForm" enctype="multipart/form-data">
+            <input type="file" id="wordInput" class="form-control" accept=".doc,.docx" required>
+            <button type="button" class="btn btn-primary mt-2" onclick="convertWordToPDF()">Convert to PDF</button>
+        </form>
+    </div>
+
+    <script>
+    fetch("navbar")
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById("navbar-placeholder").innerHTML = data;
+        });
+    fetch("header")
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById("header-placeholder").innerHTML = data;
+        });
+        
+    function convertWordToPDF() {
+        let input = document.getElementById("wordInput");
+        let file = input.files[0];
+
+        if (!file) {
+            alert("Please select a Word file.");
+            return;
+        }
+
+        let formData = new FormData();
+        formData.append("wordFile", file);
+
+        fetch("/api/wordtopdf", {
+            method: "POST",
+            body: formData
+        })
+        .then(response => response.blob())
+        .then(blob => {
+            let url = window.URL.createObjectURL(blob);
+            let a = document.createElement("a");
+            a.href = url;
+            a.download = "converted.pdf";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        })
+        .catch(error => console.error("Error:", error));
+    }
+    </script>
+</body>
+</html>
